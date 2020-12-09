@@ -1,25 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from "react";
+import "./styles.scss";
+import { Route, Switch, Redirect } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
-function App() {
+import Services from "./components/Servises";
+import Menu from "./components/Menu";
+import Home from "./components/Home";
+import { loadServices } from "./store/services";
+
+const App = (props) => {
+  const { history } = props;
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(loadServices);
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+      <header className="header-site container clearfix">
+        <Menu />
       </header>
+
+      <main className="middle-site container clearfix">
+        <Switch>
+          <Route
+            history={history}
+            path="/home"
+            render={(props) => <Home {...props} />}
+          />
+          <Route
+            history={history}
+            path="/services"
+            render={(props) => <Services {...props} />}
+          />
+          <Redirect from="/" to="/home" />
+        </Switch>
+      </main>
     </div>
   );
-}
+};
 
 export default App;

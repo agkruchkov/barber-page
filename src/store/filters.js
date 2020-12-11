@@ -9,7 +9,7 @@ const slice = createSlice({
   },
   reducers: {
     changedQuery: (state, action) => {
-      return action.payload;
+      return { ...state, ...action.payload };
     },
     filtered: (state, action) => {
       return action.payload;

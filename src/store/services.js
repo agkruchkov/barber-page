@@ -23,6 +23,8 @@ export const getFilteredServices = createSelector(
   (services, filters) => {
     let filteredServices = [...services];
 
+    console.log("Filters: ", filters);
+
     if (!filters.query || filters.query.length < 1)
       return filteredServices.filter(
         (item) =>

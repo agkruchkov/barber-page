@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import Pagination from "react-js-pagination";
+import InfiniteScroll from "react-infinite-scroller";
 
 import { getFilteredServices } from "../store/services";
 import Filter from "./Filter";
@@ -8,58 +8,58 @@ import Filter from "./Filter";
 const PER_PAGE = 5;
 
 const Services = () => {
-  const [activePage, setActivePage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [servicesList, setServicesList] = useState();
   const filteredServices = useSelector(getFilteredServices);
 
-  const handlePageChange = async (newCurrentPage) => {
-    setActivePage(newCurrentPage);
+  console.log("filteredServices: ", filteredServices);
+
+  const loadFunc = (page) => {
+    // console.log("Page: ", page);
+    const pageServices = filteredServices.filter(
+      (item, index) => index < page * PER_PAGE
+    );
+    setServicesList(pageServices);
+
+    if (page === Math.ceil(filteredServices.length / PER_PAGE) - 1)
+      setHasMore(false);
   };
 
-  const pageServices = filteredServices.filter(
-    (item, index) =>
-      index > (activePage - 1) * PER_PAGE - 1 && index < activePage * PER_PAGE
-  );
+  useEffect(() => {
+    loadFunc(1);
+  }, [filteredServices]);
 
   return (
     <div>
       <Filter />
       {filteredServices.length > 0 ? (
         <div>
-          <Pagination
-            prevPageText="prev"
-            nextPageText="next"
-            firstPageText="first"
-            lastPageText="last"
-            activePage={activePage}
-            itemsCountPerPage={PER_PAGE}
-            totalItemsCount={filteredServices.length}
-            onChange={handlePageChange}
-          />
-          <ul>
-            {pageServices.map((item, index) => (
-              <li key={index} className="service-box">
-                <img src={`${item.img}`} />
-                <div className="group-info-about-service">
-                  <h1>{item.title}</h1>
-                  <p>
-                    от {item.age[0]} до {item.age[1]} лет
-                  </p>
-                  <p>{item.gender}</p>
-                  <p>{item.content}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
-          <Pagination
-            prevPageText="prev"
-            nextPageText="next"
-            firstPageText="first"
-            lastPageText="last"
-            activePage={activePage}
-            itemsCountPerPage={PER_PAGE}
-            totalItemsCount={filteredServices.length}
-            onChange={handlePageChange}
-          />
+          <InfiniteScroll
+            pageStart={0}
+            loadMore={loadFunc}
+            hasMore={hasMore}
+            loader={
+              <div className="loader" key={0}>
+                Loading ...
+              </div>
+            }
+          >
+            <ul>
+              {servicesList?.map((item, index) => (
+                <li key={index} className="service-box">
+                  <img src={`${item.img}`} />
+                  <div className="group-info-about-service">
+                    <h1>{item.title}</h1>
+                    <p>
+                      от {item.age[0]} до {item.age[1]} лет
+                    </p>
+                    <p>{item.gender}</p>
+                    <p>{item.content}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </InfiniteScroll>
         </div>
       ) : null}
     </div>

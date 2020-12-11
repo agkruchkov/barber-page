@@ -4,6 +4,7 @@ import InfiniteScroll from "react-infinite-scroller";
 
 import { getFilteredServices } from "../store/services";
 import Filter from "./Filter";
+import ContactMe from "./ContactMe";
 
 const PER_PAGE = 5;
 
@@ -12,16 +13,13 @@ const Services = () => {
   const [servicesList, setServicesList] = useState();
   const filteredServices = useSelector(getFilteredServices);
 
-  console.log("filteredServices: ", filteredServices);
-
   const loadFunc = (page) => {
-    // console.log("Page: ", page);
     const pageServices = filteredServices.filter(
       (item, index) => index < page * PER_PAGE
     );
     setServicesList(pageServices);
 
-    if (page === Math.ceil(filteredServices.length / PER_PAGE) - 1)
+    if (page === Math.ceil(filteredServices.length / PER_PAGE))
       setHasMore(false);
   };
 
@@ -60,6 +58,7 @@ const Services = () => {
               ))}
             </ul>
           </InfiniteScroll>
+          <ContactMe />
         </div>
       ) : null}
     </div>

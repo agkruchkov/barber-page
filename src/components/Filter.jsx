@@ -2,7 +2,7 @@ import React from "react";
 import { Form, Button } from "bootstrap-4-react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { changedQuery, filtered, getFilters } from "../store/filters";
+import { filtered, getFilters } from "../store/filters";
 
 const Filter = () => {
   const dispatch = useDispatch();
@@ -28,7 +28,7 @@ const Filter = () => {
           mr="sm-3"
           value={filters.query}
           onChange={(event) =>
-            dispatch(changedQuery({ query: event.target.value }))
+            dispatch(filtered({ query: event.target.value }))
           }
         />
       </Form.Group>

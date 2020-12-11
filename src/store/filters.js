@@ -8,17 +8,14 @@ const slice = createSlice({
     gender: "Для всех",
   },
   reducers: {
-    changedQuery: (state, action) => {
-      return { ...state, ...action.payload };
-    },
     filtered: (state, action) => {
-      return action.payload;
+      return { ...state, ...action.payload };
     },
   },
 });
 
 export const getFilters = (state) => state.filters;
 
-export const { changedQuery, filtered } = slice.actions;
+export const { filtered } = slice.actions;
 
 export default slice.reducer;
